@@ -7,9 +7,13 @@ import { onMounted } from 'vue';
 
 onMounted(() => {
   axios
-    .get('/students')
+    .post('/auth/login', {
+      "email": "test2@test.com",
+      "password": "password"
+    }
+    )
     .then(res => {
-      console.log(res)
+      console.log(res.data)
     })
 })
 </script>
