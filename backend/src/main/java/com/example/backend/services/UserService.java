@@ -23,4 +23,9 @@ public class UserService {
 
         return users;
     }
+
+    public User getCurrentUser() {
+        // User currentUser = userRepository.get
+        return new User();
+    }
 }
