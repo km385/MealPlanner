@@ -21,14 +21,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "users")
 @Entity
+@Getter
+@Setter
 public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(nullable = false)
-    private Integer id;
+    private Long id;
 
     @Column(nullable = false)
     private String fullName;
@@ -95,17 +99,17 @@ public class User implements UserDetails{
     }
     // Getters and setters
 
-    public Integer getId() {
-        return id;
-    }
+    // public Integer getId() {
+    //     return id;
+    // }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // public void setId(Integer id) {
+    //     this.id = id;
+    // }
 
-    public String getFullName() {
-        return fullName;
-    }
+    // public String getFullName() {
+    //     return fullName;
+    // }
     // very important builder functions
     public User setFullName(String fullName) {
         this.fullName = fullName;
@@ -122,19 +126,19 @@ public class User implements UserDetails{
         return this;
     }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+    // public Date getCreatedAt() {
+    //     return createdAt;
+    // }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+    // public void setCreatedAt(Date createdAt) {
+    //     this.createdAt = createdAt;
+    // }
 
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
+    // public Date getUpdatedAt() {
+    //     return updatedAt;
+    // }
 
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
-    }
+    // public void setUpdatedAt(Date updatedAt) {
+    //     this.updatedAt = updatedAt;
+    // }
 }

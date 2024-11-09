@@ -4,10 +4,25 @@ import HelloWorld from './components/HelloWorld.vue'
 import axios from 'axios';
 import { onMounted } from 'vue';
 
+const yourJWTToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MkB0ZXN0LmNvbSIsImlhdCI6MTczMTA5MzY3NiwiZXhwIjoxNzMxMTgwMDc2fQ.ySaNH3bDMr0wyFtPRRrsHLwbZaff8QGKUu3vCtIOVhI"
+
 
 onMounted(() => {
   axios
     .post('/auth/login', {
+      "email": "test2@test.com",
+      "password": "password"
+    }
+    )
+    .then(res => {
+      console.log(res.data)
+    })
+
+    axios
+    .get('/recipes/', {
+      headers: {
+        Authorization: "Bearer " + yourJWTToken
+      },
       "email": "test2@test.com",
       "password": "password"
     }
