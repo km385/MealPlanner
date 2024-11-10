@@ -19,7 +19,7 @@ public class Ingredient {
     private String name;
     private String unitOfMeasure;
     private String category;
-    // getters, setters
+    
 
 
 }
