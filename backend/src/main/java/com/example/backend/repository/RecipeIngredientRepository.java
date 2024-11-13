@@ -1,15 +1,9 @@
 package com.example.backend.repository;
 
 import java.util.List;
-import java.util.Optional;
-
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import com.example.backend.entities.Ingredient;
-import com.example.backend.entities.Recipe;
 import com.example.backend.entities.RecipeIngredient;
 import com.example.backend.entities.RecipeIngredientId;
 
@@ -24,4 +18,8 @@ public interface RecipeIngredientRepository extends CrudRepository<RecipeIngredi
     // List<Ingredient> findAllWithIngredients();
 
     // boolean existsByNameAndUserId(String name, Long userId);
+
+    List<RecipeIngredient> findByRecipeId(Long recipeId);
+    List<RecipeIngredient> findByIngredientId(Long ingredientId);
+    void deleteByRecipeId(Long recipeId);
 }

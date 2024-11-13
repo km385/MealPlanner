@@ -4,16 +4,26 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import java.util.Set;
+import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.dtos.Recipe.CreateRecipeDto;
 import com.example.backend.dtos.Recipe.RecipeDto;
 import com.example.backend.dtos.Recipe.UpdateRecipeDto;
+import com.example.backend.dtos.RecipeIngredient.CreateRecipeIngredientDto;
+import com.example.backend.entities.Ingredient;
 import com.example.backend.entities.Recipe;
+import com.example.backend.entities.RecipeIngredient;
+import com.example.backend.entities.RecipeIngredientId;
 import com.example.backend.entities.User;
+import com.example.backend.mappers.IngredientMapper;
 import com.example.backend.mappers.RecipeMapper;
+import com.example.backend.repository.IngredientRepository;
 import com.example.backend.repository.RecipeRepository;
+import com.example.backend.repository.UserRepository;
+import com.example.backend.utils.SecurityUtils;
 
 import jakarta.transaction.Transactional;
 
@@ -24,9 +34,66 @@ public class RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private IngredientRepository ingredientRepository;
+    @Autowired
+    private RecipeIngredientService recipeIngredientService;
+    @Autowired
     private UserService userService;
     @Autowired
     private RecipeMapper recipeMapper;
+    @Autowired
+    private IngredientMapper ingredientMapper;
+    @Autowired
+    private SecurityUtils securityUtils;
+
+    
+    public RecipeDto createRecipe(CreateRecipeDto createDto, Long userId) {
+        securityUtils.validateUserAccess(userId);
+        User user = securityUtils.getCurrentUser();
+        // Create new Recipe entity manually instead of using mapper
+        Recipe recipe = recipeMapper.toEntity(createDto);
+        recipe.setUser(user);
+
+        // Save recipe first to get its ID
+        Recipe savedRecipe = recipeRepository.save(recipe);
+
+        Set<RecipeIngredient> recipeIngredients = new HashSet<>();
+
+        // Create and save new ingredients
+        for (CreateRecipeIngredientDto recipeIngredientDto : createDto.getIngredients()) {
+            // Convert DTO to entity and save new ingredient
+            Ingredient ingredient = ingredientMapper.toEntity(recipeIngredientDto.getIngredient());
+            Ingredient savedIngredient = ingredientRepository.save(ingredient);
+
+            // Create recipe-ingredient association
+            RecipeIngredient recipeIngredient = new RecipeIngredient();
+
+            // Create and set the composite key
+            RecipeIngredientId recipeIngredientId = new RecipeIngredientId();
+            recipeIngredientId.setRecipeId(savedRecipe.getId());
+            recipeIngredientId.setIngredientId(savedIngredient.getId());
+            recipeIngredient.setId(recipeIngredientId);
+
+            // Set the relationships and quantity
+            recipeIngredient.setRecipe(savedRecipe);
+            recipeIngredient.setIngredient(savedIngredient);
+            recipeIngredient.setQuantity(recipeIngredientDto.getQuantity());
+
+            recipeIngredients.add(recipeIngredient);
+        }
+
+        
+        savedRecipe.setRecipeIngredients(recipeIngredients);
+        savedRecipe = recipeRepository.save(savedRecipe);
+
+        
+        return recipeMapper.toDTO(savedRecipe);
+
+    }
+
+
 
     
     public List<Recipe> allRecipes() {
@@ -100,12 +167,19 @@ public class RecipeService {
         recipeRepository.delete(recipe);
     }
 
-    public List<RecipeDto> getCurrentUserRecipes() {
-        User currentUser = userService.getCurrentUser();
-        return recipeRepository.findByUserId(currentUser.getId()).stream()
-                             .map(recipeMapper::toDTO)
-                             .collect(Collectors.toList());
+    // public List<RecipeDto> getCurrentUserRecipes() {
+    //     User currentUser = userService.getCurrentUser();
+    //     return recipeRepository.findByUserId(currentUser.getId()).stream()
+    //                          .map(recipeMapper::toDTO)
+    //                          .collect(Collectors.toList());
+    // }
+
+    public List<RecipeDto> getUserRecipes(Long userId) {
+        securityUtils.validateUserAccess(userId);
+        return recipeMapper.toDTOList(recipeRepository.findByUserId(userId));
     }
 
+    
+   
     
 }

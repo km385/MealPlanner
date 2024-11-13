@@ -30,6 +30,7 @@ public class IngredientService {
     public IngredientDto createIngredient(CreateIngredientDto dto) {
         Ingredient ingredient = ingredientMapper.toEntity(dto);
         Ingredient saved = ingredientRepository.save(ingredient);
+        
         return ingredientMapper.toDTO(saved);
     }
 }
