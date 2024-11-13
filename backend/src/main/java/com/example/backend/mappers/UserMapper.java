@@ -1,4 +1,5 @@
 package com.example.backend.mappers;
+import java.util.List;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -15,7 +16,12 @@ public interface UserMapper {
     
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "recipes", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "id", ignore = true)
     User toEntity(CreateUserDto dto);
+
+    List<UserDto> toDTOList(List<User> users);
     
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "email", ignore = true)

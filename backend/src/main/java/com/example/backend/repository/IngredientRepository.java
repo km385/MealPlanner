@@ -4,13 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.backend.entities.Ingredient;
-import com.example.backend.entities.Recipe;
 
 @Repository
 public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
@@ -23,5 +19,9 @@ public interface IngredientRepository extends JpaRepository<Ingredient, Long> {
     // List<Ingredient> findAllWithIngredients();
 
     // boolean existsByNameAndUserId(String name, Long userId);
+
+    Optional<Ingredient> findByNameIgnoreCase(String name);
+    boolean existsByNameIgnoreCase(String name);
+    List<Ingredient> findByNameContainingIgnoreCase(String name);
     
 }
