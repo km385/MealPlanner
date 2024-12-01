@@ -24,12 +24,10 @@ public class UserService {
     private PasswordEncoder passwordEncoder;
 
 
-    public List<User> allUsers() {
+    public List<UserDto> allUsers() {
         List<User> users = new ArrayList<>();
 
-        userRepository.findAll().forEach(users::add);
-
-        return users;
+        return userMapper.toDTOList(userRepository.findAll());
     }
 
     public User getCurrentUser() {
