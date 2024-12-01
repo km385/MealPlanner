@@ -34,8 +34,8 @@ public class UserController {
 
     // probably not good since no admin role exists
     @GetMapping("/")
-    public ResponseEntity<List<User>> allUsers() {
-        List <User> users = userService.allUsers();
+    public ResponseEntity<List<UserDto>> allUsers() {
+        List<UserDto> users = userService.allUsers();
 
         return ResponseEntity.ok(users);
     }
