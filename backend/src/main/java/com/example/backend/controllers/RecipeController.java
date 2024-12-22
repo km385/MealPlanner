@@ -13,10 +13,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dtos.Recipe.CreateRecipeDto;
 import com.example.backend.dtos.Recipe.RecipeDto;
+import com.example.backend.dtos.Recipe.UpdateRecipeDto;
 import com.example.backend.services.RecipeService;
 import com.example.backend.utils.SecurityUtils;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 
 @RequestMapping("/recipes")
 @RestController
@@ -35,6 +39,13 @@ public class RecipeController {
     @ResponseStatus(HttpStatus.CREATED)
     public RecipeDto createRecipe(@Valid @RequestBody CreateRecipeDto dto) {
         return recipeService.createRecipe(dto, securityUtils.getCurrentUser().getId());
+    }
+
+    @PutMapping("/{id}")
+    public String putMethodName(@PathVariable Long id, @Valid @RequestBody UpdateRecipeDto dto) {
+        recipeService.updateRecipe(id, dto);
+        
+        return "receipe updated";
     }
 
 

@@ -28,5 +28,6 @@ public interface RecipeMapper {
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "recipeIngredients", source = "ingredients")
     void updateRecipeFromDTO(UpdateRecipeDto dto, @MappingTarget Recipe recipe);
 }
