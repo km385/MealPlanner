@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RecipeDto {
-    // private Long id;
+    private Long id;
     private String name;
     private String instructions;
     private List<RecipeIngredientDto> ingredients;

@@ -13,6 +13,7 @@ import com.example.backend.dtos.Recipe.CreateRecipeDto;
 import com.example.backend.dtos.Recipe.RecipeDto;
 import com.example.backend.dtos.Recipe.UpdateRecipeDto;
 import com.example.backend.dtos.RecipeIngredient.CreateRecipeIngredientDto;
+import com.example.backend.dtos.RecipeIngredient.UpdateRecipeIngredientDto;
 import com.example.backend.entities.Ingredient;
 import com.example.backend.entities.Recipe;
 import com.example.backend.entities.RecipeIngredient;
@@ -21,6 +22,7 @@ import com.example.backend.entities.User;
 import com.example.backend.mappers.IngredientMapper;
 import com.example.backend.mappers.RecipeMapper;
 import com.example.backend.repository.IngredientRepository;
+import com.example.backend.repository.RecipeIngredientRepository;
 import com.example.backend.repository.RecipeRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.utils.SecurityUtils;
@@ -37,6 +39,8 @@ public class RecipeService {
     private UserRepository userRepository;
     @Autowired
     private IngredientRepository ingredientRepository;
+    @Autowired
+    private RecipeIngredientRepository recipeIngredientRepository;
     @Autowired
     private RecipeIngredientService recipeIngredientService;
     @Autowired
@@ -139,19 +143,48 @@ public class RecipeService {
         return recipeMapper.toDTO(saved);
     }
 
+    @Transactional
     public RecipeDto updateRecipe(Long id, UpdateRecipeDto dto) {
-        Recipe existingRecipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Recipe not found")/*new RecipeNotFoundException(id)*/);
+        Recipe existingRecipe = recipeRepository.findByIdWithIngredients(id)
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
 
-        // Check if user owns the recipe
-        User currentUser = userService.getCurrentUser();
-        if (!existingRecipe.getUser().getId().equals(currentUser.getId())) {
-            // throw new UnauthorizedAccessException("You don't have permission to modify this recipe");
+        securityUtils.validateRecipeAccess(existingRecipe);
+
+        if (dto.getName() != null) {
+            existingRecipe.setName(dto.getName());
+        }
+        if (dto.getInstructions() != null) {
+            existingRecipe.setInstructions(dto.getInstructions());
         }
 
-        recipeMapper.updateRecipeFromDTO(dto, existingRecipe);
-        Recipe updated = recipeRepository.save(existingRecipe);
-        return recipeMapper.toDTO(updated);
+        if (dto.getIngredients() != null) {
+            existingRecipe.getRecipeIngredients().clear();
+
+            for (UpdateRecipeIngredientDto ingredientDto : dto.getIngredients()) {
+                Ingredient ingredient = ingredientRepository.findByNameIgnoreCase(
+                        ingredientDto.getIngredient().getName())
+                        .orElseGet(() -> {
+                            Ingredient newIngredient = new Ingredient();
+                            ingredientMapper.updateIngredientFromDTO(ingredientDto.getIngredient(), newIngredient);
+                            return ingredientRepository.save(newIngredient);
+                        });
+
+                RecipeIngredient recipeIngredient = new RecipeIngredient();
+                RecipeIngredientId recipeIngredientId = new RecipeIngredientId();
+                recipeIngredientId.setRecipeId(existingRecipe.getId());
+                recipeIngredientId.setIngredientId(ingredient.getId());
+
+                recipeIngredient.setId(recipeIngredientId);
+                recipeIngredient.setRecipe(existingRecipe);
+                recipeIngredient.setIngredient(ingredient);
+                recipeIngredient.setQuantity(ingredientDto.getQuantity());
+
+                existingRecipe.getRecipeIngredients().add(recipeIngredient);
+            }
+        }
+
+        Recipe updatedRecipe = recipeRepository.save(existingRecipe);
+        return recipeMapper.toDTO(updatedRecipe);
     }
 
     public void deleteRecipe(Long id) {

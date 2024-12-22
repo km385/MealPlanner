@@ -47,7 +47,11 @@ public class Recipe {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL)
+    @OneToMany(
+        mappedBy = "recipe", 
+        cascade = CascadeType.ALL, 
+        orphanRemoval = true
+    )
     private Set<RecipeIngredient> recipeIngredients;
 
     // Getters and Setters
