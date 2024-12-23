@@ -187,17 +187,16 @@ public class RecipeService {
         return recipeMapper.toDTO(updatedRecipe);
     }
 
+    @Transactional
     public void deleteRecipe(Long id) {
         Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Recipe not found")/*new RecipeNotFoundException(id)*/);
+                .orElseThrow(() -> new RuntimeException("Recipe not found"));
 
-        // Check if user owns the recipe
-        User currentUser = userService.getCurrentUser();
-        if (!recipe.getUser().getId().equals(currentUser.getId())) {
-            // throw new UnauthorizedAccessException("You don't have permission to delete this recipe");
-        }
-
+        securityUtils.validateRecipeAccess(recipe);
+        
+        // The cascade settings will handle deletion of recipe ingredients and ingredients
         recipeRepository.delete(recipe);
+        recipeRepository.flush();
     }
 
     // public List<RecipeDto> getCurrentUserRecipes() {
