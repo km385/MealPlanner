@@ -54,6 +54,13 @@ public class Recipe {
     )
     private Set<RecipeIngredient> recipeIngredients;
 
+    public void removeAllRecipeIngredients() {
+        if (recipeIngredients != null) {
+            recipeIngredients.forEach(ri -> ri.setRecipe(null));
+            recipeIngredients.clear();
+        }
+    }
+
     // Getters and Setters
 
     // public Integer getId() {
