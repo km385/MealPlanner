@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="h-[calc(100vh-theme(height.navbar))] flex items-center justify-center bg-gray-100">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
             <form @submit.prevent="handleLogin">
@@ -44,10 +44,17 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-const email = ref('wrong@test.com');
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const auth = useAuthStore()
+
+const email = ref('test1@test.com');
 const password = ref('password');
 const errorMessage = ref('');
 const formErrors = ref({});
+
 
 const handleLogin = async () => {
     formErrors.value = {};
@@ -57,8 +64,10 @@ const handleLogin = async () => {
             email: email.value,
             password: password.value
         });
-		console.log(response.data)
-        // router.push('/');
+        const jwt = response.data.token;
+        const expiresIn = response.data.expiresIn;
+        auth.login(jwt, expiresIn);
+        router.push('/');
     } catch (error) {
         if (error.response && error.response.status === 403) {
             errorMessage.value = 'Invalid email or password.';

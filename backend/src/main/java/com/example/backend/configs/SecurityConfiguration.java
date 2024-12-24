@@ -34,6 +34,7 @@ public class SecurityConfiguration {
                 .disable())
                 .cors(cors -> cors
                         .configurationSource(corsConfigurationSource()))
+                // request that don't match /auth/** should be authenticated
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/auth/**")
                         .permitAll()
@@ -51,11 +52,13 @@ public class SecurityConfiguration {
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
 
-        configuration.setAllowedOrigins(List.of("http://localhost:5173"));
-        configuration.setAllowedOrigins(List.of("http://127.0.0.1:5173"));
+        configuration.setAllowedOrigins(List.of(
+            "http://localhost:5173", 
+            "http://127.0.0.1:5173")
+        );
         configuration.setAllowedMethods(List.of("GET","POST"));
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
-
+        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 
         source.registerCorsConfiguration("/**",configuration);
