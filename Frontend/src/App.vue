@@ -1,50 +1,30 @@
 <script setup>
 import { RouterLink, RouterView, useRouter } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
-import axios from 'axios';
-import { onMounted } from 'vue';
+import { onMounted } from 'vue'
+import { useAuthStore } from './stores/auth'
 
-let yourJWTToken = "yJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0ZXN0MUB0ZXN0LmNvbSIsImlhdCI6MTczNDk1OTYzMCwiZXhwIjoxNzM1MDQ2MDMwfQ.d-WlvVeK7__aQlGwwWdwWjBAIS2DjHyuPta0Txm4hRU"
+const auth = useAuthStore()
 
-
-onMounted(async () => {
-  // const data = await axios.post('/auth/login', {
-  //   "email": "test1@test.com",
-  //   "password": "password"
-  // }
-  // )
-  // console.log(data.data)
-  // yourJWTToken = data.data.token
-  // const recipes = await axios
-  //   .get('/recipes', {
-  //     headers: {
-  //       Authorization: "Bearer " + yourJWTToken
-  //     }
-  //   }
-  //   )
-  // console.log(recipes.data)
-
-  
-  
-    
+onMounted(() => {
+  auth.checkAuth()
 })
-
 </script>
 
 <template>
   <header>
 
     <div class="wrapper">
-      <!-- <HelloWorld msg="You did it!" /> -->
-
-      <nav class="flex items-center my-2">
-        <RouterLink class="bg-red-400 p-2 rounded-md mr-2" to="/">Home</RouterLink>
-        <RouterLink class="bg-red-400 p-2 rounded-md mr-2" to="/about">About</RouterLink>
-        <RouterLink class="bg-red-400 p-2 rounded-md mr-2" to="/login">Login</RouterLink>
-        <RouterLink class="bg-red-400 p-2 rounded-md mr-2" to="/register">Register</RouterLink>
-
+      <nav class="flex items-center justify-between px-2 h-[theme(height.navbar)] bg-gray-600 ">
+        <div class="flex items-center">
+          <RouterLink class="btn-nav" to="/">Home</RouterLink>
+          <RouterLink class="btn-nav" to="/about">About</RouterLink>
+        </div>
+        <div class="flex items-center">
+          <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/login">Login</RouterLink>
+          <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/register">Register</RouterLink>
+          <button v-if="auth.isAuthenticated" @click="auth.logout" class="btn-nav">Logout</button>
+        </div>
       </nav>
-      
     </div>
   </header>
 

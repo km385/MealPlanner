@@ -8,22 +8,22 @@ const RegisterView = () => import('@/views/RegisterView.vue')
 const paths = [
   {
     path: '/',
-    name: 'home',
+    name: 'Meal Planner',
     component: HomeView,
   },
   {
     path: '/about',
-    name: 'about',
+    name: 'About',
     component: AboutView,
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'Login page',
     component: LoginView
   },
   {
     path: '/register',
-    name: 'register',
+    name: 'Register page',
     component: RegisterView,
   },
 ]
@@ -32,5 +32,11 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: paths,
 })
+
+// Set the title of the page to the name of the route
+router.beforeEach((to, from, next) => {
+  document.title = to.name
+  next()
+});
 
 export default router

@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen flex items-center justify-center bg-gray-100">
+    <div class="h-[calc(100vh-theme(height.navbar))] flex items-center justify-center bg-gray-100">
         <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
             <h2 class="text-2xl font-bold mb-6 text-center">Register</h2>
             <form @submit.prevent="handleRegister">
@@ -48,8 +48,13 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import axios from 'axios';
+import { useAuthStore } from '@/stores/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+const auth = useAuthStore()
 
 const fullName = ref('j');
 const email = ref('test@test.com');
@@ -63,6 +68,7 @@ const handleRegister = async () => {
             "email": email.value,
             "password": password.value
         })
+        await loginAfterRegister()
     } catch (error) {
         if (error.response && error.response.status === 400) {
             const errors = error.response.data;
@@ -72,6 +78,22 @@ const handleRegister = async () => {
         }
     }
 
+}
+
+const loginAfterRegister = async () => {
+    try {
+        const response = await axios.post('/auth/login', {
+            email: email.value,
+            password: password.value
+        });
+        console.log('')
+        const jwt = response.data.token;
+        const expiresIn = response.data.expiresIn;
+        auth.login(jwt, expiresIn);
+        router.push('/');
+    } catch (error) {
+        console.error(error);
+    }
 }
     
 </script>
