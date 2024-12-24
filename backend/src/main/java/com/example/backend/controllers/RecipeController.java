@@ -36,6 +36,11 @@ public class RecipeController {
         return recipeService.getUserRecipes(securityUtils.getCurrentUser().getId());
     }
 
+    @GetMapping("/{id}")
+    public RecipeDto getUserRecipesById(@PathVariable Long id) {
+        return recipeService.getRecipeById(id);
+    }
+
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public RecipeDto createRecipe(@Valid @RequestBody CreateRecipeDto dto) {
