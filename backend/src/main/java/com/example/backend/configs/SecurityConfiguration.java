@@ -56,7 +56,7 @@ public class SecurityConfiguration {
             "http://localhost:5173", 
             "http://127.0.0.1:5173")
         );
-        configuration.setAllowedMethods(List.of("GET","POST"));
+        configuration.setAllowedMethods(List.of("GET","POST", "DELETE", "PUT"));
         configuration.setAllowedHeaders(List.of("Authorization","Content-Type"));
         configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

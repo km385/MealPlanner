@@ -4,10 +4,15 @@ import { onMounted } from 'vue'
 import { useAuthStore } from './stores/auth'
 
 const auth = useAuthStore()
-
+const router = useRouter()
 onMounted(() => {
   auth.checkAuth()
 })
+
+const logout = () => {
+  auth.logout()
+  router.push('/')
+}
 </script>
 
 <template>
@@ -18,11 +23,12 @@ onMounted(() => {
         <div class="flex items-center">
           <RouterLink class="btn-nav" to="/">Home</RouterLink>
           <RouterLink class="btn-nav" to="/about">About</RouterLink>
+          <RouterLink v-if="auth.isAuthenticated" class="btn-nav" to="/recipes">Recipes</RouterLink>
         </div>
         <div class="flex items-center">
           <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/login">Login</RouterLink>
           <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/register">Register</RouterLink>
-          <button v-if="auth.isAuthenticated" @click="auth.logout" class="btn-nav">Logout</button>
+          <button v-if="auth.isAuthenticated" @click="logout" class="btn-nav">Logout</button>
         </div>
       </nav>
     </div>

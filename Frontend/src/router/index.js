@@ -1,9 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
+import { useAuthStore } from '@/stores/auth'
 
 const AboutView = () => import('@/views/AboutView.vue')
 const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
+const UserRecipesView = () => import('@/views/UserRecipesView.vue')
+const RecipeDetailsView = () => import('@/views/RecipeDetailsView.vue')
 
 const paths = [
   {
@@ -26,6 +29,21 @@ const paths = [
     name: 'Register page',
     component: RegisterView,
   },
+  {
+    path: '/recipes',
+    name: 'My recipes',
+    component: UserRecipesView,
+    meta: {
+      requiresAuth: true,
+    }
+  },
+  ,
+  {
+    path: '/recipes/:id',
+    name: 'RecipeDetails',
+    component: RecipeDetailsView,
+    meta: { requiresAuth: true }
+  }
 ]
 
 const router = createRouter({
@@ -33,10 +51,20 @@ const router = createRouter({
   routes: paths,
 })
 
+// Auth guard
+router.beforeEach((to, from) => {
+  const auth = useAuthStore()
+  
+  if (to.meta.requiresAuth && !auth.isAuthenticated) {
+    return { name: 'Login page' }
+  } 
+})
+
 // Set the title of the page to the name of the route
-router.beforeEach((to, from, next) => {
+router.beforeEach((to, from) => {
   document.title = to.name
-  next()
 });
+
+
 
 export default router
