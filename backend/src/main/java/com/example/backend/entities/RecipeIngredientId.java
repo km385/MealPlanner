@@ -14,6 +14,5 @@ import lombok.Setter;
 public class RecipeIngredientId implements Serializable {
     private Long recipeId;
     private Long ingredientId;
-    // equals, hashCode
     
 }

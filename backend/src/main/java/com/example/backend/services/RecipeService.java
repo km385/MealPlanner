@@ -1,13 +1,11 @@
 package com.example.backend.services;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import java.util.Set;
 import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.dtos.Recipe.CreateRecipeDto;

@@ -94,19 +94,7 @@ public class User implements UserDetails{
     public boolean isEnabled() {
         return true;
     }
-    // Getters and setters
-
-    // public Integer getId() {
-    //     return id;
-    // }
-
-    // public void setId(Integer id) {
-    //     this.id = id;
-    // }
-
-    // public String getFullName() {
-    //     return fullName;
-    // }
+    
     // very important builder functions
     public User setFullName(String fullName) {
         this.fullName = fullName;
@@ -123,19 +111,4 @@ public class User implements UserDetails{
         return this;
     }
 
-    // public Date getCreatedAt() {
-    //     return createdAt;
-    // }
-
-    // public void setCreatedAt(Date createdAt) {
-    //     this.createdAt = createdAt;
-    // }
-
-    // public Date getUpdatedAt() {
-    //     return updatedAt;
-    // }
-
-    // public void setUpdatedAt(Date updatedAt) {
-    //     this.updatedAt = updatedAt;
-    // }
 }

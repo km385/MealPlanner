@@ -31,5 +31,4 @@ public class RecipeIngredient {
     private Ingredient ingredient;
     
     private BigDecimal quantity;
-    // getters, setters
 }
