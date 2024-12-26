@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,6 +20,7 @@ import com.example.backend.services.RecipeService;
 import com.example.backend.utils.SecurityUtils;
 
 import jakarta.validation.Valid;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
@@ -32,53 +34,45 @@ public class RecipeController {
     private SecurityUtils securityUtils;
 
     @GetMapping
-    public List<RecipeDto> getUserRecipes() {
-        return recipeService.getUserRecipes(securityUtils.getCurrentUser().getId());
+    public ResponseEntity<?> getUserRecipes() {
+        List<RecipeDto> recipes = recipeService.getCurrentUserRecipes();
+        return ResponseEntity.ok(recipes);
     }
 
     @GetMapping("/{id}")
-    public RecipeDto getUserRecipesById(@PathVariable Long id) {
-        return recipeService.getRecipeById(id);
+    public ResponseEntity<?> getUserRecipesById(@PathVariable Long id) {
+        
+        RecipeDto recipe = recipeService.getRecipeById(id);
+        return ResponseEntity.ok(recipe);
+        
     }
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public RecipeDto createRecipe(@Valid @RequestBody CreateRecipeDto dto) {
-        return recipeService.createRecipe(dto, securityUtils.getCurrentUser().getId());
+    public ResponseEntity<?> createRecipe(@Valid @RequestBody CreateRecipeDto dto) { 
+        RecipeDto recipe = recipeService.createRecipe(dto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipe);
     }
 
     @PutMapping("/{id}")
-    public String putMethodName(@PathVariable Long id, @Valid @RequestBody UpdateRecipeDto dto) {
-        recipeService.updateRecipe(id, dto);
-        
-        return "receipe updated";
+    public ResponseEntity<?> updateRecipe(@PathVariable Long id,
+            @Valid @RequestBody UpdateRecipeDto dto) {
+        RecipeDto updatedRecipe = recipeService.updateRecipe(id, dto);
+        return ResponseEntity.ok(updatedRecipe);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteRecipe(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<?> deleteRecipe(@PathVariable Long id) {
         recipeService.deleteRecipe(id);
-        return "recipe deleted";
+        return ResponseEntity.ok("Recipe deleted");
     }
 
-
-
-
-    // @GetMapping("/")
-    // public ResponseEntity<List<Recipe>> allRecipes() {
-    //     List <Recipe> recipes = recipeService.allRecipes();
-
-    //     return ResponseEntity.ok(recipes);
-    // }
-
-    // @PostMapping("/add")
-    // public ResponseEntity<String> addRecipe(@RequestBody Recipe recipe) {
-    //     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-    //     User currentUser = (User) authentication.getPrincipal();
-    //     recipe.setUser(currentUser);
-    //     recipeService.addRecipe(recipe);
-        
-    //     return ResponseEntity.ok("recipe has been added");
-    // }
-
+    // for testing purposes
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<?> deleteAllRecipes() {
+        recipeService.deleteAllRecipes();
+        return ResponseEntity.ok("All recipes deleted");
+    }
     
 }
