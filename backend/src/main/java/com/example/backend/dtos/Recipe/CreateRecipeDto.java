@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.backend.dtos.RecipeIngredient.CreateRecipeIngredientDto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
@@ -23,5 +24,6 @@ public class CreateRecipeDto {
     private String instructions;
 
     @NotEmpty(message = "At least one ingredient is required")
+    @Valid
     private List<CreateRecipeIngredientDto> ingredients;
 }

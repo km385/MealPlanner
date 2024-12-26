@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import java.util.Set;
 import java.util.HashSet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.dtos.Recipe.CreateRecipeDto;
@@ -19,6 +20,7 @@ import com.example.backend.entities.Recipe;
 import com.example.backend.entities.RecipeIngredient;
 import com.example.backend.entities.RecipeIngredientId;
 import com.example.backend.entities.User;
+import com.example.backend.exceptions.RecipeNotFoundException;
 import com.example.backend.mappers.IngredientMapper;
 import com.example.backend.mappers.RecipeMapper;
 import com.example.backend.repository.IngredientRepository;
@@ -52,10 +54,27 @@ public class RecipeService {
     @Autowired
     private SecurityUtils securityUtils;
 
-    
-    public RecipeDto createRecipe(CreateRecipeDto createDto, Long userId) {
-        securityUtils.validateUserAccess(userId);
+    public List<RecipeDto> getAllRecipes() {
+        return recipeRepository.findAllWithIngredients().stream()
+                             .map(recipeMapper::toDTO)
+                             .collect(Collectors.toList());
+    }
+
+    public RecipeDto getRecipeById(Long id) {
+
+        Recipe recipe = recipeRepository.findByIdWithIngredients(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id));
+        securityUtils.validateRecipeAccess(recipe);
+       
+        return recipeMapper.toDTO(recipe);
+    }
+
+    public RecipeDto createRecipe(CreateRecipeDto createDto) {
+
         User user = securityUtils.getCurrentUser();
+        securityUtils.validateUserAccess(user.getId());
+
+        
         // Create new Recipe entity manually instead of using mapper
         Recipe recipe = recipeMapper.toEntity(createDto);
         recipe.setUser(user);
@@ -87,69 +106,22 @@ public class RecipeService {
 
             recipeIngredients.add(recipeIngredient);
         }
-
-        
         savedRecipe.setRecipeIngredients(recipeIngredients);
         savedRecipe = recipeRepository.save(savedRecipe);
 
-        
         return recipeMapper.toDTO(savedRecipe);
-
-    }
-
-
-
     
-    public List<Recipe> allRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
 
-        recipeRepository.findAll().forEach(recipes::add);
-
-        return recipes;
-    }
-
-    public Recipe addRecipe(Recipe recipe) {
-        return recipeRepository.save(recipe);
-    }
-
-    // nowe
-
-    public List<RecipeDto> getAllRecipes() {
-        return recipeRepository.findAllWithIngredients().stream()
-                             .map(recipeMapper::toDTO)
-                             .collect(Collectors.toList());
-    }
-
-    public RecipeDto getRecipeById(Long id) {
-        
-        Recipe recipe = recipeRepository.findByIdWithIngredients(id)
-                .orElseThrow(() -> new RuntimeException("Recipe not found")/*new RecipeNotFoundException(id)*/);
-        RecipeDto recipeDto = recipeMapper.toDTO(recipe);
-        return recipeDto;
-    }
-
-    public RecipeDto createRecipe(CreateRecipeDto dto) {
-        User currentUser = userService.getCurrentUser();
-        
-        // Check if user already has a recipe with this name
-        if (recipeRepository.existsByNameAndUserId(dto.getName(), currentUser.getId())) {
-            // throw new DuplicateRecipeException(dto.getName());
-        }
-
-        Recipe recipe = recipeMapper.toEntity(dto);
-        recipe.setUser(currentUser);
-        
-        Recipe saved = recipeRepository.save(recipe);
-        return recipeMapper.toDTO(saved);
     }
 
     @Transactional
     public RecipeDto updateRecipe(Long id, UpdateRecipeDto dto) {
         Recipe existingRecipe = recipeRepository.findByIdWithIngredients(id)
-                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+                .orElseThrow(() -> new RecipeNotFoundException(id));
 
         securityUtils.validateRecipeAccess(existingRecipe);
 
+        
         if (dto.getName() != null) {
             existingRecipe.setName(dto.getName());
         }
@@ -190,28 +162,22 @@ public class RecipeService {
     @Transactional
     public void deleteRecipe(Long id) {
         Recipe recipe = recipeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Recipe not found"));
+                .orElseThrow(() -> new RecipeNotFoundException(id));
 
         securityUtils.validateRecipeAccess(recipe);
-        
-        // The cascade settings will handle deletion of recipe ingredients and ingredients
         recipeRepository.delete(recipe);
-        recipeRepository.flush();
     }
 
-    // public List<RecipeDto> getCurrentUserRecipes() {
-    //     User currentUser = userService.getCurrentUser();
-    //     return recipeRepository.findByUserId(currentUser.getId()).stream()
-    //                          .map(recipeMapper::toDTO)
-    //                          .collect(Collectors.toList());
-    // }
-
-    public List<RecipeDto> getUserRecipes(Long userId) {
-        securityUtils.validateUserAccess(userId);
-        return recipeMapper.toDTOList(recipeRepository.findByUserId(userId));
+    public List<RecipeDto> getCurrentUserRecipes() {
+        User currentUser = securityUtils.getCurrentUser();
+        List<Recipe> recipes = recipeRepository.findByUserId(currentUser.getId());
+        return recipeMapper.toDTOList(recipes);
     }
 
-    
-   
+    // for testing
+    @Transactional
+    public void deleteAllRecipes() {
+        recipeRepository.deleteAll();
+    }
     
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.backend.dtos.RecipeIngredient.UpdateRecipeIngredientDto;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -15,5 +16,6 @@ public class UpdateRecipeDto {
     @Size(max = 1000, message = "Instructions cannot exceed 1000 characters")
     private String instructions;
     
+    @Valid
     private List<UpdateRecipeIngredientDto> ingredients; // Optional for updates
 }
