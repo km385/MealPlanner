@@ -38,6 +38,12 @@ public class GlobalExceptionHandler {
         return new ErrorResponse("Database error", "Could not perform operation due to data constraint");
     }
 
+    @ExceptionHandler(MealForTheDayNotFound.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ErrorResponse handleGenerald(Exception e) {
+        return new ErrorResponse("Meals not found", e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGeneral(Exception e) {
