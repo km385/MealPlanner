@@ -2,6 +2,7 @@ package com.example.backend.entities;
 
 import java.util.Date;
 import java.util.Set;
+import java.util.HashSet;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -58,6 +59,24 @@ public class Recipe {
         if (recipeIngredients != null) {
             recipeIngredients.forEach(ri -> ri.setRecipe(null));
             recipeIngredients.clear();
+        }
+    }
+
+    @OneToMany(mappedBy = "recipe", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<MealPlan> mealPlans = new HashSet<>();
+
+    public Set<MealPlan> getMealPlans() {
+        return mealPlans;
+    }
+
+    public void setMealPlans(Set<MealPlan> mealPlans) {
+        this.mealPlans = mealPlans;
+    }
+
+    public void removeAllMealPlans() {
+        if (mealPlans != null) {
+            mealPlans.forEach(mp -> mp.setRecipe(null));
+            mealPlans.clear();
         }
     }
 

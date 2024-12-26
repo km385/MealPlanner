@@ -52,6 +52,13 @@ public class RecipeService {
     @Autowired
     private SecurityUtils securityUtils;
 
+    public Recipe getRecipeEntity(Long id) {
+        Recipe recipe = recipeRepository.findByIdWithIngredients(id)
+                .orElseThrow(() -> new RecipeNotFoundException(id));
+        securityUtils.validateRecipeAccess(recipe);
+        return recipe;
+    }
+
     public List<RecipeDto> getAllRecipes() {
         return recipeRepository.findAllWithIngredients().stream()
                              .map(recipeMapper::toDTO)
@@ -163,6 +170,7 @@ public class RecipeService {
                 .orElseThrow(() -> new RecipeNotFoundException(id));
 
         securityUtils.validateRecipeAccess(recipe);
+        recipe.getMealPlans().clear();
         recipeRepository.delete(recipe);
     }
 
