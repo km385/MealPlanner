@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', () => {
   const checkAuth = () => {
     const token = cookies.getCookie('jwt')
     isAuthenticated.value = !!token
-    
+
     return isAuthenticated.value
   }
 
@@ -28,6 +28,6 @@ export const useAuthStore = defineStore('auth', () => {
     isAuthenticated,
     login,
     logout,
-    checkAuth
+    checkAuth,
   }
 })

@@ -17,9 +17,8 @@ const logout = () => {
 
 <template>
   <header>
-
     <div class="wrapper">
-      <nav class="flex items-center justify-between px-2 h-[theme(height.navbar)] bg-gray-600 ">
+      <nav class="flex items-center justify-between px-2 h-[theme(height.navbar)] bg-gray-600">
         <div class="flex items-center">
           <RouterLink class="btn-nav" to="/">Home</RouterLink>
           <RouterLink class="btn-nav" to="/about">About</RouterLink>
@@ -27,7 +26,9 @@ const logout = () => {
         </div>
         <div class="flex items-center">
           <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/login">Login</RouterLink>
-          <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/register">Register</RouterLink>
+          <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/register"
+            >Register</RouterLink
+          >
           <button v-if="auth.isAuthenticated" @click="logout" class="btn-nav">Logout</button>
         </div>
       </nav>
@@ -36,4 +37,3 @@ const logout = () => {
 
   <RouterView />
 </template>
-

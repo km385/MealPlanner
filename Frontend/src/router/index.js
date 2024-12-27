@@ -22,7 +22,7 @@ const paths = [
   {
     path: '/login',
     name: 'Login page',
-    component: LoginView
+    component: LoginView,
   },
   {
     path: '/register',
@@ -35,15 +35,15 @@ const paths = [
     component: UserRecipesView,
     meta: {
       requiresAuth: true,
-    }
+    },
   },
   ,
   {
     path: '/recipes/:id',
     name: 'RecipeDetails',
     component: RecipeDetailsView,
-    meta: { requiresAuth: true }
-  }
+    meta: { requiresAuth: true },
+  },
 ]
 
 const router = createRouter({
@@ -52,19 +52,17 @@ const router = createRouter({
 })
 
 // Auth guard
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   const auth = useAuthStore()
-  
+
   if (to.meta.requiresAuth && !auth.isAuthenticated) {
     return { name: 'Login page' }
-  } 
+  }
 })
 
 // Set the title of the page to the name of the route
-router.beforeEach((to, from) => {
+router.beforeEach((to) => {
   document.title = to.name
-});
-
-
+})
 
 export default router
