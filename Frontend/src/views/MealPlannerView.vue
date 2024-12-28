@@ -80,7 +80,7 @@ import { ref, onMounted } from 'vue'
 import axios from 'axios'
 import { useCookies } from '@/composables/useCookies'
 
-const mealTypes = ['BREAKFAST', 'LUNCH', 'DINNER']
+const mealTypes = ['BREAKFAST', 'LUNCH', 'DINNER', 'SNACK']
 const daysOfWeek = ['MONDAY', 'TUESDAY', 'WEDNESDAY', 'THURSDAY', 'FRIDAY', 'SATURDAY', 'SUNDAY']
 
 const mealPlan = ref([])

@@ -23,6 +23,7 @@ const logout = () => {
           <RouterLink class="btn-nav" to="/">Home</RouterLink>
           <RouterLink class="btn-nav" to="/about">About</RouterLink>
           <RouterLink v-if="auth.isAuthenticated" class="btn-nav" to="/recipes">Recipes</RouterLink>
+          <RouterLink v-if="auth.isAuthenticated" class="btn-nav" to="/mealplan">Planner</RouterLink>
         </div>
         <div class="flex items-center">
           <RouterLink v-if="!auth.isAuthenticated" class="btn-nav" to="/login">Login</RouterLink>
