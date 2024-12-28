@@ -1,7 +1,12 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-8">My Recipes</h1>
-
+    <button
+      @click="router.push('/recipes/add')"
+      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+    >
+      Add
+    </button>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Recipe Card -->
       <div
@@ -13,7 +18,6 @@
         <!-- Recipe Header -->
         <div class="bg-gray-800 text-white p-4">
           <h2 class="text-xl font-semibold">{{ recipe.name }}</h2>
-          <p class="text-sm text-gray-300">by {{ recipe.userName }}</p>
         </div>
 
         <!-- Recipe Content -->

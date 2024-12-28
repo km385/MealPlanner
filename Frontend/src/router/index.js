@@ -7,6 +7,8 @@ const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
 const UserRecipesView = () => import('@/views/UserRecipesView.vue')
 const RecipeDetailsView = () => import('@/views/RecipeDetailsView.vue')
+const CreateNewRecipeView = () => import('@/views/CreateNewRecipeView.vue')
+const MealPlanView = () => import('@/views/MealPlannerView.vue')
 
 const paths = [
   {
@@ -37,12 +39,27 @@ const paths = [
       requiresAuth: true,
     },
   },
-  ,
   {
     path: '/recipes/:id',
     name: 'RecipeDetails',
     component: RecipeDetailsView,
     meta: { requiresAuth: true },
+  },
+  {
+    path: '/recipes/add',
+    name: 'Add recipe',
+    component: CreateNewRecipeView,
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: '/mealplan',
+    name: 'mealplan',
+    component: MealPlanView,
+    meta: {
+      requiresAuth: true,
+    },
   },
 ]
 
