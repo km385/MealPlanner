@@ -1,10 +1,3 @@
-<script setup>
-import { useRouter, useRoute } from 'vue-router'
-import RecipeDetailsInformation from '@/components/RecipeInfo/RecipeDetailsInformation.vue'
-const router = useRouter()
-const route = useRoute()
-</script>
-
 <template>
   <div class="container mx-auto px-4 py-8">
     <button
@@ -13,6 +6,84 @@ const route = useRoute()
     >
       Back to Recipes
     </button>
-    <RecipeDetailsInformation :recipeId="route.params.id" />
+    <TheForm
+      v-if="recipe"
+      :recipe="recipe"
+      :readonly="isReadonly"
+      @save:recipe="saveEdit"
+      @edit:recipe="enterEditMode"
+      @cancel:edit="cancelEdit"
+      @delete:recipe="deleteRecipe"
+    />
   </div>
 </template>
+
+<script setup>
+import { useRouter, useRoute } from 'vue-router'
+import axios from 'axios'
+import { useCookies } from '@/composables/useCookies'
+import { ref } from 'vue'
+import TheForm from './TheForm.vue'
+import { onMounted } from 'vue'
+const router = useRouter()
+const route = useRoute()
+
+const recipe = ref(null)
+const originalRecipe = ref(null)
+
+const enterEditMode = () => {
+  originalRecipe.value = JSON.parse(JSON.stringify(recipe.value))
+  isReadonly.value = false
+}
+
+const cancelEdit = () => {
+  recipe.value = JSON.parse(JSON.stringify(originalRecipe.value))
+  isReadonly.value = true
+  router.go()
+}
+const isReadonly = ref(true)
+
+const saveEdit = async (newRecipe) => {
+  recipe.value = newRecipe
+  await axios.put(`/recipes/${route.params.id}`, newRecipe, {
+    headers: {
+      Authorization: `Bearer ${useCookies().getCookie('jwt')}`,
+    },
+  })
+
+  isReadonly.value = true
+}
+
+const deleteRecipe = async () => {
+  await axios.delete(`/recipes/${route.params.id}`, {
+    headers: {
+      Authorization: `Bearer ${useCookies().getCookie('jwt')}`,
+    },
+  })
+  router.push('/recipes')
+}
+
+const fetchRecipe = async () => {
+  try {
+    const response = await axios.get(`/recipes/${route.params.id}`, {
+      headers: {
+        Authorization: `Bearer ${useCookies().getCookie('jwt')}`,
+      },
+    })
+    recipe.value = response.data
+  } catch (error) {
+    if (error.response.status === 404) {
+      console.error('Recipe not found')
+      // router.push('/404')
+    } else if (error.response.status === 403) {
+      router.push('/recipes')
+    } else {
+      console.error('Error fetching recipe:', error)
+    }
+  }
+}
+
+onMounted(() => {
+  fetchRecipe()
+})
+</script>
