@@ -16,7 +16,4 @@ public class RecipeDto {
     private String name;
     private String instructions;
     private List<RecipeIngredientDto> ingredients;
-    // private String createdAt;
-    // private String updatedAt;
-    private String userName;
 }

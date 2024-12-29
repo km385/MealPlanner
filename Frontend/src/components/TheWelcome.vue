@@ -7,7 +7,7 @@
         <p class="text-xl text-gray-600 mb-8">
           Plan your meals, organize your recipes, and simplify your cooking journey
         </p>
-        <div class="flex justify-center gap-4">
+        <div v-if="!auth.isAuthenticated" class="flex justify-center gap-4">
           <RouterLink
             to="/register"
             class="px-6 py-3 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors duration-200"
@@ -46,4 +46,10 @@
 
 <script setup>
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '@/stores/auth'
+import { onMounted } from 'vue'
+const auth = useAuthStore()
+onMounted(() => {
+  auth.checkAuth()
+})
 </script>

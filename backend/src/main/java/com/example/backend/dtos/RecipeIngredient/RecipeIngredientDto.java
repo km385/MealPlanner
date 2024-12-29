@@ -8,11 +8,6 @@ import lombok.Data;
 
 @Data
 public class RecipeIngredientDto {
-    // private Long recipeId;
-    // private Long ingredientId;
-    // private String ingredientName;
-    // private String unitOfMeasure;
-    // private BigDecimal quantity;
     private IngredientDto ingredient;
     private BigDecimal quantity;
 }

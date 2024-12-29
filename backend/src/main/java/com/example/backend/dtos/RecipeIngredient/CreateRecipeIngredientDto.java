@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import com.example.backend.dtos.Ingredient.CreateIngredientDto;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.DecimalMax;
+import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;
@@ -25,5 +27,7 @@ public class CreateRecipeIngredientDto {
 
     @NotNull(message = "Quantity is required")
     @Positive(message = "Quantity must be positive")
+    @DecimalMax(value = "10000.0", message = "Quantity cannot exceed 10000")
+    @Digits(integer = 6, fraction = 2, message = "Quantity must have at most 6 digits and 2 decimal places")
     private BigDecimal quantity;
 }

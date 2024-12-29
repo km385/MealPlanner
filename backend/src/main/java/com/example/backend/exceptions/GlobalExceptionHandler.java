@@ -8,8 +8,11 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import com.example.backend.utils.ValidationUtils;
+
+import java.util.Arrays;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -63,9 +66,28 @@ public class GlobalExceptionHandler {
         return new ErrorResponse("Registration failed", e.getMessage());
     }
 
+    
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGeneral(Exception e) {
         return new ErrorResponse("Internal server error", e.getMessage());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleEnumTypeException(MethodArgumentTypeMismatchException ex) {
+        if (ex.getParameter().getParameter().getType().isEnum()) {
+            String enumClass = ex.getParameter().getParameter().getType().getSimpleName();
+            String invalidValue = String.valueOf(ex.getValue());
+            String message = String.format(
+                "Invalid value '%s' for %s. Allowed values are: %s",
+                invalidValue,
+                enumClass,
+                Arrays.toString(ex.getParameter().getParameter().getType().getEnumConstants())
+            );
+            return new ErrorResponse("Invalid enum value", message);
+        }
+        return new ErrorResponse("Bad request", ex.getMessage());
     }
 }
