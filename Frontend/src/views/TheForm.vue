@@ -57,8 +57,7 @@
         :readonly="readonly"
         :errors="errorMessages?.details"
       />
-    <p v-if="errorMessages" class="px-6 text-red-500">{{ errorMessages.details.ingredients }}</p>
-
+      <p v-if="errorMessages" class="px-6 text-red-500">{{ errorMessages.details.ingredients }}</p>
     </div>
     <!-- instructions -->
     <template v-if="!readonly">

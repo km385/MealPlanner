@@ -21,7 +21,7 @@ const logout = () => {
       <nav class="flex items-center justify-between px-2 h-[theme(height.navbar)] bg-gray-600">
         <div class="flex items-center">
           <RouterLink class="btn-nav" to="/">Home</RouterLink>
-          <RouterLink class="btn-nav" to="/about">About</RouterLink>
+          <!-- <RouterLink class="btn-nav" to="/about">About</RouterLink> -->
           <RouterLink v-if="auth.isAuthenticated" class="btn-nav" to="/recipes">Recipes</RouterLink>
           <RouterLink v-if="auth.isAuthenticated" class="btn-nav" to="/mealplan"
             >Planner</RouterLink
