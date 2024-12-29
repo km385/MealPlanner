@@ -1,12 +1,15 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">My Recipes</h1>
-    <button
-      @click="router.push('/recipes/add')"
-      class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    >
-      Add
-    </button>
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold">My Recipes</h1>
+      <button
+        @click="router.push('/recipes/add')"
+        class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors duration-200 inline-flex items-center gap-2"
+      >
+        <IconPlus class="h-6 w-6" />
+        Add Recipe
+      </button>
+    </div>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <!-- Recipe Card -->
       <div
@@ -56,6 +59,7 @@ import { onMounted } from 'vue'
 import { useCookies } from '@/composables/useCookies'
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import IconPlus from '@/components/icons/IconPlus.vue'
 
 const recipes = ref([])
 const router = useRouter()

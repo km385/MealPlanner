@@ -1,21 +1,12 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <button
-      @click="router.back()"
-      class="mb-4 px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
-    >
+    <button @click="router.back()"
+      class="mb-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors duration-200 inline-flex items-center gap-2">
+      <IconBack class="h-6 w-6" />
       Back to Recipes
     </button>
-    <TheForm
-      v-if="recipe"
-      :recipe="recipe"
-      :readonly="isReadonly"
-      :error-messages="errorMessages"
-      @save:recipe="saveEdit"
-      @edit:recipe="enterEditMode"
-      @cancel:edit="cancelEdit"
-      @delete:recipe="deleteRecipe"
-    />
+    <TheForm v-if="recipe" :recipe="recipe" :readonly="isReadonly" :error-messages="errorMessages"
+      @save:recipe="saveEdit" @edit:recipe="enterEditMode" @cancel:edit="cancelEdit" @delete:recipe="deleteRecipe" />
   </div>
 </template>
 
@@ -26,6 +17,7 @@ import { useCookies } from '@/composables/useCookies'
 import { ref } from 'vue'
 import TheForm from './TheForm.vue'
 import { onMounted } from 'vue'
+import IconBack from '@/components/icons/IconBack.vue'
 const router = useRouter()
 const route = useRoute()
 
