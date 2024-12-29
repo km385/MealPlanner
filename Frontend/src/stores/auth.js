@@ -14,7 +14,6 @@ export const useAuthStore = defineStore('auth', () => {
   const logout = () => {
     cookies.removeCookie('jwt')
     isAuthenticated.value = false
-    console.log(`wylogownaie ${isAuthenticated.value}`)
   }
 
   const checkAuth = () => {

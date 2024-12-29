@@ -85,7 +85,6 @@ const loginAfterRegister = async () => {
       email: email.value,
       password: password.value,
     })
-    console.log('')
     const jwt = response.data.token
     const expiresIn = response.data.expiresIn
     auth.login(jwt, expiresIn)
