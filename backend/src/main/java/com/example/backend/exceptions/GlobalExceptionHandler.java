@@ -3,6 +3,7 @@ package com.example.backend.exceptions;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -28,8 +29,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleValidationErrors(MethodArgumentNotValidException e) {
-        return new ErrorResponse("Validation failed", 
-            ValidationUtils.mapValidationErrors(e.getBindingResult()));
+        return new ErrorResponse("Validation failed",
+                ValidationUtils.mapValidationErrors(e.getBindingResult()));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
@@ -44,9 +45,27 @@ public class GlobalExceptionHandler {
         return new ErrorResponse("Meals not found", e.getMessage());
     }
 
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleBadCredentials(BadCredentialsException e) {
+        return new ErrorResponse("Authentication failed", "Invalid username or password");
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ErrorResponse handleAuthentication(AuthenticationException e) {
+        return new ErrorResponse("Authentication failed", e.getMessage());
+    }
+
+    @ExceptionHandler(RegistrationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleRegistration(RegistrationException e) {
+        return new ErrorResponse("Registration failed", e.getMessage());
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleGeneral(Exception e) {
-        return new ErrorResponse("Internal server error", "An unexpected error occurred");
+        return new ErrorResponse("Internal server error", e.getMessage());
     }
 }

@@ -67,13 +67,12 @@ const handleLogin = async () => {
     auth.login(jwt, expiresIn)
     router.push('/')
   } catch (error) {
-    if (error.response && error.response.status === 403) {
-      errorMessage.value = 'Invalid email or password.'
+    if (error.response && error.response.status === 401) {
+      errorMessage.value = error.response.data.details
     } else if (error.response && error.response.status === 400) {
-      const errors = error.response.data
-      formErrors.value = errors
+      formErrors.value = error.response.data.details
     } else {
-      console.error(error)
+      errorMessage.value = error.response.data.details
     }
   }
 }

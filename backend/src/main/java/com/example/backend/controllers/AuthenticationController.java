@@ -33,44 +33,14 @@ public class AuthenticationController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> register(@Valid @RequestBody RegisterUserDto registerUserDto, BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            
-            bindingResult.getAllErrors().forEach(error -> {
-                // Split the error message based on field and description
-                String field = ((org.springframework.validation.FieldError) error).getField();
-                String message = error.getDefaultMessage();
-                
-                errors.put(field, message);
-            });
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
-
-
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterUserDto registerUserDto) {
         User registeredUser = authenticationService.signup(registerUserDto);
 
         return ResponseEntity.ok(registeredUser);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> authenticate(@Valid @RequestBody LoginUserDto loginUserDto, BindingResult bindingResult) {
-        if (bindingResult.hasErrors()) {
-            Map<String, String> errors = new HashMap<>();
-            
-            bindingResult.getAllErrors().forEach(error -> {
-                // Split the error message based on field and description
-                String field = ((org.springframework.validation.FieldError) error).getField();
-                String message = error.getDefaultMessage();
-                
-                errors.put(field, message);
-            });
-
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errors);
-        }
-
+    public ResponseEntity<?> authenticate(@Valid @RequestBody LoginUserDto loginUserDto) {
         User authenticatedUser = authenticationService.authenticate(loginUserDto);
 
         String jwtToken = jwtService.generateToken(authenticatedUser);
