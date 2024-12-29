@@ -18,8 +18,4 @@ public class Ingredient {
     private Long id;
     private String name;
     private String unitOfMeasure;
-    private String category;
-    
-
-
 }

@@ -13,7 +13,6 @@ import com.example.backend.entities.Recipe;
 @Mapper(componentModel = "spring", uses = {RecipeIngredientMapper.class})
 public interface RecipeMapper {
     
-    @Mapping(target = "userName", source = "user.username") 
     @Mapping(target = "ingredients", source = "recipeIngredients")
     RecipeDto toDTO(Recipe recipe);
 
