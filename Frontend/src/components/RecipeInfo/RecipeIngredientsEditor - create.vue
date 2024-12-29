@@ -7,33 +7,65 @@
         <li
           v-for="(item, index) in ingredients"
           :key="item.ingredient.id"
-          class="flex justify-between items-center bg-gray-50 p-3 rounded"
+          class="flex flex-col bg-gray-50 p-3 rounded"
         >
-          <span class="font-medium">{{ item.ingredient.name }}</span>
-          <div class="flex items-center gap-4">
-            <template v-if="!readonly">
-              <input
-                type="number"
-                v-model.number="item.quantity"
-                class="w-24 px-2 py-1 border rounded"
-                min="0"
-              />
-            </template>
-            <template v-else>
-              <p>{{ item.quantity }}</p>
-            </template>
+          <div class="flex justify-between items-start w-full">
+            <div class="flex flex-col">
+              <span class="font-medium max-w-[300px] truncate inline-block">{{
+                item.ingredient.name
+              }}</span>
+              <span
+                v-if="getIngredientError(index, 'ingredient.name')"
+                class="text-sm text-red-500 mt-1"
+              >
+                {{ getIngredientError(index, 'ingredient.name') }}
+              </span>
+            </div>
 
-            <span>{{ item.ingredient.unitOfMeasure }}</span>
-            <button
-              v-if="!readonly"
-              @click="removeIngredient(index)"
-              class="text-red-600 hover:text-red-800 p-2"
-            >
-              ×
-            </button>
+            <div class="flex items-start gap-4">
+              <div class="flex flex-col">
+                <template v-if="!readonly">
+                  <input
+                    type="number"
+                    v-model.number="item.quantity"
+                    class="w-24 px-2 py-1 border rounded"
+                    :class="{ 'border-red-500': getIngredientError(index, 'quantity') }"
+                    min="0"
+                  />
+                  <span
+                    v-if="getIngredientError(index, 'quantity')"
+                    class="text-sm text-red-500 mt-1"
+                  >
+                    {{ getIngredientError(index, 'quantity') }}
+                  </span>
+                </template>
+                <template v-else>
+                  <p>{{ item.quantity }}</p>
+                </template>
+              </div>
+
+              <div class="flex flex-col">
+                <span>{{ item.ingredient.unitOfMeasure }}</span>
+                <span
+                  v-if="getIngredientError(index, 'ingredient.unitOfMeasure')"
+                  class="text-sm text-red-500 mt-1"
+                >
+                  {{ getIngredientError(index, 'ingredient.unitOfMeasure') }}
+                </span>
+              </div>
+
+              <button
+                v-if="!readonly"
+                @click="removeIngredient(index)"
+                class="text-red-600 hover:text-red-800 p-2"
+              >
+                ×
+              </button>
+            </div>
           </div>
         </li>
       </ul>
+
       <div v-if="!readonly" class="flex items-end gap-4 bg-gray-50 p-4 rounded">
         <div class="flex-1">
           <label class="block text-sm font-medium text-gray-700 mb-1"> Ingredient Name </label>
@@ -86,7 +118,16 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  errors: {
+    type: Object,
+    default: () => ({}),
+  },
 })
+
+const getIngredientError = (index, field) => {
+  return props.errors[`ingredients[${index}].${field}`]
+}
+
 const ingredients = ref(props.initialIngredients)
 
 const emit = defineEmits(['update:ingredients'])

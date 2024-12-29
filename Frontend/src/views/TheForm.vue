@@ -13,6 +13,7 @@
               class="w-full px-3 py-2 text-gray-800 rounded"
               placeholder="Recipe name"
             />
+            <p class="text-red-500" v-if="errorMessages">{{ errorMessages.details.name }}</p>
           </template>
         </div>
 
@@ -54,7 +55,10 @@
         :initial-ingredients="recipe.ingredients"
         @update:ingredients="updateIngredients"
         :readonly="readonly"
+        :errors="errorMessages?.details"
       />
+    <p v-if="errorMessages" class="px-6 text-red-500">{{ errorMessages.details.ingredients }}</p>
+
     </div>
     <!-- instructions -->
     <template v-if="!readonly">
@@ -62,6 +66,7 @@
         <h2 class="text-2xl font-semibold mb-4">Instructions</h2>
         <textarea v-model="recipe.instructions" class="w-full p-3 border rounded" rows="4">
         </textarea>
+        <p v-if="errorMessages" class="text-red-500">{{ errorMessages.details.instructions }}</p>
       </div>
     </template>
     <template v-else>
@@ -85,6 +90,10 @@ const props = defineProps({
     type: Boolean,
     required: true,
   },
+  errorMessages: {
+    type: Object,
+    required: false,
+  },
 })
 
 const emit = defineEmits(['save:recipe', 'edit:recipe', 'cancel:edit', 'delete:recipe'])
@@ -102,7 +111,6 @@ watch(
 )
 
 const startEditing = () => {
-  console.log('start editing')
   emit('edit:recipe')
 }
 
@@ -120,7 +128,6 @@ const deleteRecipe = () => {
 
 const updateIngredients = (newIngredients) => {
   recipe.value.ingredients = newIngredients
-  console.log(recipe.value)
 }
 
 const handleKeydown = (e) => {
@@ -130,12 +137,11 @@ const handleKeydown = (e) => {
   }
 
   if (e.key === 'Enter') {
-    console.log('Enter key pressed')
+    saveEdit()
   }
 }
 
 onMounted(() => {
-  console.log(recipe.value)
   window.addEventListener('keydown', handleKeydown)
 })
 
@@ -144,18 +150,18 @@ onUnmounted(() => {
 })
 
 import { onBeforeRouteLeave } from 'vue-router'
-// onBeforeRouteLeave(() => {
-//   console.log('readonly:', readonly)
-//   if (readonly.value) {
-//     return true
-//   }
-//   const answer = confirm('You have unsaved changes. Are you sure you want to leave?')
+onBeforeRouteLeave(() => {
+  // change the value of readonly in parent to true to leave this form
+  if (props.readonly) {
+    return true
+  }
+  const answer = confirm('You have unsaved changes. Are you sure you want to leave?')
 
-//   if (!answer) {
-//     return false
-//   } else {
-//     emit('update:readonly', true)
-//     return false
-//   }
-// })
+  if (!answer) {
+    return false
+  } else {
+    emit('cancel:edit')
+    return false
+  }
+})
 </script>

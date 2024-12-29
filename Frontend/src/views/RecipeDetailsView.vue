@@ -10,6 +10,7 @@
       v-if="recipe"
       :recipe="recipe"
       :readonly="isReadonly"
+      :error-messages="errorMessages"
       @save:recipe="saveEdit"
       @edit:recipe="enterEditMode"
       @cancel:edit="cancelEdit"
@@ -43,15 +44,20 @@ const cancelEdit = () => {
 }
 const isReadonly = ref(true)
 
+const errorMessages = ref(null)
+
 const saveEdit = async (newRecipe) => {
   recipe.value = newRecipe
-  await axios.put(`/recipes/${route.params.id}`, newRecipe, {
-    headers: {
-      Authorization: `Bearer ${useCookies().getCookie('jwt')}`,
-    },
-  })
-
-  isReadonly.value = true
+  try {
+    await axios.put(`/recipes/${route.params.id}`, newRecipe, {
+      headers: {
+        Authorization: `Bearer ${useCookies().getCookie('jwt')}`,
+      },
+    })
+    isReadonly.value = true
+  } catch (e) {
+    errorMessages.value = e.response.data
+  }
 }
 
 const deleteRecipe = async () => {

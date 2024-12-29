@@ -1,11 +1,16 @@
 <template>
   <div class="container mx-auto px-4 py-8">
-    <TheForm :recipe="recipe" :readonly="false" @save:recipe="saveEdit" @cancel:edit="cancelEdit" />
+    <TheForm
+      :recipe="recipe"
+      :readonly="isReadOnly"
+      :error-messages="errorMessages"
+      @save:recipe="saveEdit"
+      @cancel:edit="cancelEdit"
+    />
   </div>
 </template>
 
 <script setup>
-import { onBeforeRouteLeave } from 'vue-router'
 import { ref } from 'vue'
 import axios from 'axios'
 import { useCookies } from '@/composables/useCookies'
@@ -19,32 +24,26 @@ const recipe = ref({
   instructions: '',
 })
 
+const isReadOnly = ref(false)
+const errorMessages = ref(null)
+
 const saveEdit = async () => {
   try {
-    console.log(recipe.value)
     await axios.post(`/recipes`, recipe.value, {
       headers: {
         Authorization: `Bearer ${useCookies().getCookie('jwt')}`,
       },
     })
+    isReadOnly.value = true
     router.push('/recipes')
   } catch (error) {
-    console.error('Error updating recipe:', error)
+    errorMessages.value = error.response.data
+    console.log(errorMessages.value)
   }
 }
 
 const cancelEdit = () => {
+  isReadOnly.value = true
   router.push('/recipes')
 }
-
-// Prevent leaving the page if there are unsaved changes
-// onBeforeRouteLeave(() => {
-//   const answer = confirm('You have unsaved changes. Are you sure you want to leave?')
-
-//   if (!answer) {
-//     return false
-//   } else {
-//     return true
-//   }
-// })
 </script>
