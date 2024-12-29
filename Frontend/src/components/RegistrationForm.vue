@@ -42,6 +42,9 @@
         >
           Register
         </button>
+        <div v-if="errorMessage" class="text-red-500 mt-4 text-center">
+          {{ errorMessage }}
+        </div>
       </form>
     </div>
   </div>
@@ -60,6 +63,7 @@ const fullName = ref('j')
 const email = ref('test@test.com')
 const password = ref('password')
 const formErrors = ref({})
+const errorMessage = ref('')
 const handleRegister = async () => {
   formErrors.value = {}
   try {
@@ -71,10 +75,10 @@ const handleRegister = async () => {
     await loginAfterRegister()
   } catch (error) {
     if (error.response && error.response.status === 400) {
-      const errors = error.response.data
+      const errors = error.response.data.details
       formErrors.value = errors
     } else {
-      console.error(error)
+      errorMessage.value = error.response.data.details
     }
   }
 }
