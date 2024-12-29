@@ -1,8 +1,6 @@
-// import './assets/main.css'
-
 import { createApp } from 'vue'
-import App from './App.vue'
-import router from './router'
+import App from '@/App.vue'
+import router from '@/router/router'
 import axios from 'axios'
 import './index.css'
 import VueCookies from 'vue-cookies'

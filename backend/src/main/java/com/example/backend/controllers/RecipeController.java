@@ -17,7 +17,6 @@ import com.example.backend.dtos.Recipe.CreateRecipeDto;
 import com.example.backend.dtos.Recipe.RecipeDto;
 import com.example.backend.dtos.Recipe.UpdateRecipeDto;
 import com.example.backend.services.RecipeService;
-import com.example.backend.utils.SecurityUtils;
 
 import jakarta.validation.Valid;
 
@@ -30,8 +29,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 public class RecipeController {
     @Autowired
     private RecipeService recipeService;
-    @Autowired
-    private SecurityUtils securityUtils;
 
     @GetMapping
     public ResponseEntity<?> getUserRecipes() {

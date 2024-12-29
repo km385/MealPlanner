@@ -3,9 +3,7 @@
     <!-- Hero Section -->
     <div class="container mx-auto px-4 py-16">
       <div class="text-center max-w-3xl mx-auto">
-        <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6">
-          Welcome to MealPlanner
-        </h1>
+        <h1 class="text-4xl md:text-6xl font-bold text-gray-800 mb-6">Welcome to MealPlanner</h1>
         <p class="text-xl text-gray-600 mb-8">
           Plan your meals, organize your recipes, and simplify your cooking journey
         </p>
@@ -29,11 +27,15 @@
     <!-- Features Section -->
     <div class="container mx-auto px-4 py-16">
       <div class="grid md:grid-cols-2 gap-8">
-        <div class="p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200">
+        <div
+          class="p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200"
+        >
           <h3 class="text-xl font-semibold text-gray-800 mb-4">Recipe Management</h3>
           <p class="text-gray-600">Store and organize your favorite recipes in one place</p>
         </div>
-        <div class="p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200">
+        <div
+          class="p-6 bg-white rounded-lg shadow-lg transform hover:scale-105 transition-transform duration-200"
+        >
           <h3 class="text-xl font-semibold text-gray-800 mb-4">Meal Planning</h3>
           <p class="text-gray-600">Plan your weekly meals with our intuitive calendar</p>
         </div>
