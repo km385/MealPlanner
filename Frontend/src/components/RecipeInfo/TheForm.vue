@@ -51,7 +51,7 @@
     </div>
     <!-- ingredients -->
     <div>
-      <RecipeIngredientsEditorCreate
+      <RecipeIngredientsEditor
         :initial-ingredients="recipe.ingredients"
         @update:ingredients="updateIngredients"
         :readonly="readonly"
@@ -79,7 +79,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import RecipeIngredientsEditorCreate from '@/components/RecipeInfo/RecipeIngredientsEditor - create.vue'
+import RecipeIngredientsEditor from '@/components/RecipeInfo/RecipeIngredientsEditor.vue'
 const props = defineProps({
   recipe: {
     type: Object,

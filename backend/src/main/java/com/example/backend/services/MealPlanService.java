@@ -14,7 +14,6 @@ import com.example.backend.mappers.MealPlanMapper;
 import com.example.backend.repository.MealPlanRepository;
 import com.example.backend.utils.SecurityUtils;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import jakarta.transaction.Transactional;
 
@@ -33,15 +32,15 @@ public class MealPlanService {
     public MealPlanDto assignRecipeToDay(Long recipeId, DayOfWeek day, MealType mealType) {
         User currentUser = securityUtils.getCurrentUser();
         Recipe recipe = recipeService.getRecipeEntity(recipeId);
-        
+
         // replace the existing meal plan if it exists
         MealPlan mealPlan = mealPlanRepository
-        .findByUserIdAndDayOfWeekAndMealType(currentUser.getId(), day, mealType)
-        .map(existing -> {
-            existing.setRecipe(recipe);
-            return existing;
-        })
-        .orElse(new MealPlan(currentUser, recipe, day, mealType));
+                .findByUserIdAndDayOfWeekAndMealType(currentUser.getId(), day, mealType)
+                .map(existing -> {
+                    existing.setRecipe(recipe);
+                    return existing;
+                })
+                .orElse(new MealPlan(currentUser, recipe, day, mealType));
 
         return mealPlanMapper.toDTO(mealPlanRepository.save(mealPlan));
     }
@@ -49,8 +48,8 @@ public class MealPlanService {
     public List<MealPlanDto> getRecipesForDay(DayOfWeek day) {
         User currentUser = securityUtils.getCurrentUser();
         List<MealPlan> mealPlans = mealPlanRepository
-            .findByUserIdAndDayOfWeek(currentUser.getId(), day);
-        
+                .findByUserIdAndDayOfWeek(currentUser.getId(), day);
+
         if (mealPlans.isEmpty()) {
             throw new MealForTheDayNotFound(currentUser.getId(), day);
         }
@@ -61,16 +60,14 @@ public class MealPlanService {
     public List<MealPlanDto> getRecipesForWeek() {
         User currentUser = securityUtils.getCurrentUser();
         return mealPlanMapper.toDTOList(
-            mealPlanRepository.findByUserIdOrderByDayOfWeek(currentUser.getId())
-        );
+                mealPlanRepository.findByUserIdOrderByDayOfWeek(currentUser.getId()));
     }
 
     public void removeRecipeFromDay(DayOfWeek day, MealType mealType) {
         User currentUser = securityUtils.getCurrentUser();
         mealPlanRepository.deleteByUserIdAndDayOfWeekAndMealType(
-            currentUser.getId(), 
-            day, 
-            mealType
-        );
+                currentUser.getId(),
+                day,
+                mealType);
     }
 }

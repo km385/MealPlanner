@@ -15,7 +15,7 @@ import { ref } from 'vue'
 import axios from 'axios'
 import { useCookies } from '@/composables/useCookies'
 import { useRouter } from 'vue-router'
-import TheForm from './TheForm.vue'
+import TheForm from '../components/RecipeInfo/TheForm.vue'
 
 const router = useRouter()
 const recipe = ref({
@@ -38,7 +38,6 @@ const saveEdit = async () => {
     router.push('/recipes')
   } catch (error) {
     errorMessages.value = error.response.data
-    console.log(errorMessages.value)
   }
 }
 

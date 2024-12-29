@@ -22,9 +22,7 @@ import com.example.backend.exceptions.RecipeNotFoundException;
 import com.example.backend.mappers.IngredientMapper;
 import com.example.backend.mappers.RecipeMapper;
 import com.example.backend.repository.IngredientRepository;
-import com.example.backend.repository.RecipeIngredientRepository;
 import com.example.backend.repository.RecipeRepository;
-import com.example.backend.repository.UserRepository;
 import com.example.backend.utils.SecurityUtils;
 
 import jakarta.transaction.Transactional;
@@ -36,15 +34,7 @@ public class RecipeService {
     @Autowired
     private RecipeRepository recipeRepository;
     @Autowired
-    private UserRepository userRepository;
-    @Autowired
     private IngredientRepository ingredientRepository;
-    @Autowired
-    private RecipeIngredientRepository recipeIngredientRepository;
-    @Autowired
-    private RecipeIngredientService recipeIngredientService;
-    @Autowired
-    private UserService userService;
     @Autowired
     private RecipeMapper recipeMapper;
     @Autowired
