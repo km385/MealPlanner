@@ -6,6 +6,7 @@
       :error-messages="errorMessages"
       @save:recipe="saveEdit"
       @cancel:edit="cancelEdit"
+      @update:errors="updateErrors"
     />
   </div>
 </template>
@@ -44,5 +45,12 @@ const saveEdit = async () => {
 const cancelEdit = () => {
   isReadOnly.value = true
   router.push('/recipes')
+}
+
+const updateErrors = (newErrors) => {
+  errorMessages.value = {
+    ...errorMessages.value,
+    details: newErrors,
+  }
 }
 </script>

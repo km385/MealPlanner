@@ -130,7 +130,7 @@ const getIngredientError = (index, field) => {
 
 const ingredients = ref(props.initialIngredients)
 
-const emit = defineEmits(['update:ingredients'])
+const emit = defineEmits(['update:ingredients', 'update:errors'])
 
 const units = [
   'grams',
@@ -172,6 +172,20 @@ const addIngredient = () => {
 
 const removeIngredient = (index) => {
   ingredients.value.splice(index, 1)
+  removeIngredientErrors(index)
   emit('update:ingredients', ingredients.value)
+}
+
+const removeIngredientErrors = (index) => {
+  const newErrors = { ...props.errors }
+  const errorKeys = Object.keys(newErrors)
+
+  errorKeys.forEach((key) => {
+    if (key.startsWith(`ingredients[${index}]`)) {
+      delete newErrors[key]
+    }
+  })
+
+  emit('update:errors', newErrors)
 }
 </script>

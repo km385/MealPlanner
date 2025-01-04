@@ -16,6 +16,7 @@
       @edit:recipe="enterEditMode"
       @cancel:edit="cancelEdit"
       @delete:recipe="deleteRecipe"
+      @update:errors="updateErrors"
     />
   </div>
 </template>
@@ -59,6 +60,13 @@ const saveEdit = async (newRecipe) => {
     isReadonly.value = true
   } catch (e) {
     errorMessages.value = e.response.data
+  }
+}
+
+const updateErrors = (newErrors) => {
+  errorMessages.value = {
+    ...errorMessages.value,
+    details: newErrors,
   }
 }
 

@@ -54,6 +54,7 @@
       <RecipeIngredientsEditor
         :initial-ingredients="recipe.ingredients"
         @update:ingredients="updateIngredients"
+        @update:errors="updateFormErrors"
         :readonly="readonly"
         :errors="errorMessages?.details"
       />
@@ -95,7 +96,13 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['save:recipe', 'edit:recipe', 'cancel:edit', 'delete:recipe'])
+const emit = defineEmits([
+  'save:recipe',
+  'edit:recipe',
+  'cancel:edit',
+  'delete:recipe',
+  'update:errors',
+])
 
 import { onMounted, onUnmounted } from 'vue'
 import { watch } from 'vue'
@@ -123,6 +130,10 @@ const saveEdit = () => {
 
 const deleteRecipe = () => {
   emit('delete:recipe')
+}
+
+const updateFormErrors = (newErrors) => {
+  emit('update:errors', newErrors)
 }
 
 const updateIngredients = (newIngredients) => {
