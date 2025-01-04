@@ -71,5 +71,12 @@ public class RecipeController {
         recipeService.deleteAllRecipes();
         return ResponseEntity.ok("All recipes deleted");
     }
+
+    @PostMapping("/batch")
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResponseEntity<?> createRecipes(@Valid @RequestBody List<CreateRecipeDto> dtos) {
+        List<RecipeDto> recipes = recipeService.createRecipes(dtos);
+        return ResponseEntity.status(HttpStatus.CREATED).body(recipes);
+    }
     
 }

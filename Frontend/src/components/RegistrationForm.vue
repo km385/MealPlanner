@@ -59,7 +59,7 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const auth = useAuthStore()
 
-const fullName = ref('j')
+const fullName = ref('jakub')
 const email = ref('test@test.com')
 const password = ref('password')
 const formErrors = ref({})

@@ -175,5 +175,12 @@ public class RecipeService {
     public void deleteAllRecipes() {
         recipeRepository.deleteAll();
     }
+
+    @Transactional
+    public List<RecipeDto> createRecipes(List<CreateRecipeDto> createDtos) {
+        return createDtos.stream()
+                .map(this::createRecipe)
+                .collect(Collectors.toList());
+    }
     
 }
