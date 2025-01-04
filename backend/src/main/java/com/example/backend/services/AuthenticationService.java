@@ -5,8 +5,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.example.backend.dtos.LoginUserDto;
-import com.example.backend.dtos.RegisterUserDto;
+import com.example.backend.dtos.User.LoginUserDto;
+import com.example.backend.dtos.User.RegisterUserDto;
 import com.example.backend.entities.User;
 import com.example.backend.repository.UserRepository;
 

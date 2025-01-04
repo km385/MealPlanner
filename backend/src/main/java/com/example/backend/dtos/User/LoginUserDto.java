@@ -1,4 +1,4 @@
-package com.example.backend.dtos;
+package com.example.backend.dtos.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

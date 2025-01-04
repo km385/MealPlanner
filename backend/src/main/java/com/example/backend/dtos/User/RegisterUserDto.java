@@ -1,4 +1,4 @@
-package com.example.backend.dtos;
+package com.example.backend.dtos.User;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 public class RegisterUserDto {
     @NotBlank(message = "Full name is required")
-    @Size(min = 2, max = 100)
+    @Size(min = 2, max = 100, message = "Full name must be between 2 and 100 characters")
     private String fullName;
 
     @NotBlank(message = "Email is required")

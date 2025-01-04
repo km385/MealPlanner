@@ -22,6 +22,4 @@ public class LoginResponse {
         this.expiresIn = expiresIn;
         return this;
     }
-
- // Getters and setters...
 }

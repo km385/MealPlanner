@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.backend.dtos.LoginUserDto;
-import com.example.backend.dtos.RegisterUserDto;
+import com.example.backend.dtos.User.LoginUserDto;
+import com.example.backend.dtos.User.RegisterUserDto;
 import com.example.backend.entities.User;
 import com.example.backend.responses.LoginResponse;
 import com.example.backend.services.AuthenticationService;

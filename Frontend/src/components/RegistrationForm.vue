@@ -77,6 +77,8 @@ const handleRegister = async () => {
     if (error.response && error.response.status === 400) {
       const errors = error.response.data.details
       formErrors.value = errors
+    } else if (error.response && error.response.status === 409) {
+      errorMessage.value = 'Email already exists'
     } else {
       errorMessage.value = error.response.data.details
     }

@@ -2,7 +2,6 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import { useAuthStore } from '@/stores/auth'
 
-const AboutView = () => import('@/views/AboutView.vue')
 const LoginView = () => import('@/views/LoginView.vue')
 const RegisterView = () => import('@/views/RegisterView.vue')
 const UserRecipesView = () => import('@/views/UserRecipesView.vue')
@@ -15,11 +14,6 @@ const paths = [
     path: '/',
     name: 'Meal Planner',
     component: HomeView,
-  },
-  {
-    path: '/about',
-    name: 'About',
-    component: AboutView,
   },
   {
     path: '/login',
