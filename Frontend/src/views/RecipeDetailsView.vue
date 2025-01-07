@@ -1,7 +1,7 @@
 <template>
   <div class="container mx-auto px-4 py-8">
     <button
-      @click="router.back()"
+      @click="isReadonly ? router.back(): cancelEdit()"
       class="mb-4 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 transition-colors duration-200 inline-flex items-center gap-2"
     >
       <IconBack class="h-6 w-6" />
@@ -25,7 +25,7 @@
 import { useRouter, useRoute } from 'vue-router'
 import axios from 'axios'
 import { useCookies } from '@/composables/useCookies'
-import { ref } from 'vue'
+import { readonly, ref } from 'vue'
 import TheForm from '../components/RecipeInfo/TheForm.vue'
 import { onMounted } from 'vue'
 import IconBack from '@/components/icons/IconBack.vue'
